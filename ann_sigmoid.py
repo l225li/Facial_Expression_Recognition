@@ -19,11 +19,11 @@ class ANN(object):
 		costs = []
 		best_validation_error = 1
 		for i in xrange(epochs):
+			# forward propagation and cost calulation
 			pY, Z = self.forward(X)
 			pY_Y = pY - Y
 			self.W2 -= learning_rate*(Z.T.dot(pY_Y) + reg*self.W2)
 			self.b2 -= learning_rate*((pY_Y).sum() + reg*self.b2)
-
 			dZ = np.outer(pY_Y, self.W2) * (1 - Z*Z)
 			self.W1 -= learning_rate*(X.T.dot(dZ) + reg*self.W1)
 			self.b1 -= learning_rate*(np.sum(dZ, axis=0) + reg*self.b1)
@@ -46,8 +46,10 @@ class ANN(object):
 
 
 	def forward(self, X):
+		# Z = relu(X.dot(self.W1) + self.b1)
 		Z = np.tanh(X.dot(self.W1) + self.b1)
 		return sigmoid(Z.dot(self.W2) + self.b2), Z
+
 	def predict(self, X):
 		pY = self.forward(X)
 		return np.round(pY)

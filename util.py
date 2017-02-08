@@ -10,7 +10,9 @@ def init_weight_and_bias(M1, M2):
 
 def init_filter(shape, poolsz):
 	# for convolutional neural networks
-	pass
+	w = np.random.randn(*shape) / np.sqrt(np.prod(shape[1:]) + shape[0]*np.prod(shape[2:] / np.prod(poolsz)))
+	return w.astype(np.float32)
+
 	
 def relu(x):
 	# can be used when using a older version of Theano with no relu built in
@@ -37,7 +39,7 @@ def cost2(T, Y):
 	# same as cost(), just uses the targets to index Y
     # instead of multiplying by a large indicator matrix with mostly 0s
     N = len(T)
-    return -log(Y[np.arange(N), T]).mean()
+    return -np.log(Y[np.arange(N), T]).mean()
 
 
 def error_rate(targets, predictions):
@@ -62,13 +64,13 @@ def getData(balance_ones = True):
 	Y = []
 	first = True
 
-	for line in open('fer2013.csv'):
+	for line in open('../../large_files/fer2013.csv'):
 		if first:
 			first = False
 		else:
 			row = line.split(',')
-			Y.append(int(row(0)))
-			X.append([int(p) for p in row(1).split()])
+			Y.append(int(row[0]))
+			X.append([int(p) for p in row[1].split()])
 	X, Y = np.array(X) / 255.0, np.array(Y)
 	# normalize X(0-255) to 0-1
 	if balance_ones:
@@ -94,7 +96,7 @@ def getBinaryData():
 	X = []
 	Y = []
 	first = True
-	for line in open('fer2013.csv'):
+	for line in open('../../large_files/fer2013.csv'):
 		if first:
 			first = False
 		else:
